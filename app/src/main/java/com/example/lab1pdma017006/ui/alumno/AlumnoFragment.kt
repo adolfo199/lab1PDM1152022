@@ -6,7 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import com.example.lab1pdma017006.R
+import com.example.lab1pdma017006.databinding.AlumnoFragmentBinding
 
 class AlumnoFragment : Fragment() {
 
@@ -20,13 +24,26 @@ class AlumnoFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.alumno_fragment, container, false)
+        viewModel = ViewModelProvider(activity?:this).get(AlumnoViewModel::class.java)
+        // TODO: Use the ViewModel
+        val view = inflater.inflate(R.layout.alumno_fragment, container, false)
+        val binding = AlumnoFragmentBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        val aceptButton:Button = view.findViewById(R.id.acept_alumno_button)
+        val inputName:EditText =view.findViewById(R.id.editTextNombre)
+        val inputCarnet:EditText = view.findViewById(R.id.editTextCarnet)
+
+        aceptButton.setOnClickListener(){
+            viewModel.showAlumnoData(inputName.text.toString(),inputCarnet.text.toString())
+        }
+        return view
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(AlumnoViewModel::class.java)
-        // TODO: Use the ViewModel
+
+
+    override fun onStart() {
+        viewModel.init(activity)
+        super.onStart()
     }
 
 }
